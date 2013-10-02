@@ -7,10 +7,23 @@ module ActiveModel
       end
 
       class HasMany #:nodoc:
+        def serializables_with_cancan
+          return serializables_without_cancan unless authorize?
+          object.select {|item| find_serializable(item).can?(:read, item) }.map do |item|
+            find_serializable(item)
+          end
+        end
+        alias_method_chain :serializables, :cancan
+
         def serialize_ids_with_cancan
           return serialize_ids_without_cancan unless authorize?
           object.select {|item| find_serializable(item).can?(:read, item) }.map do |item|
-            find_serializable(item).serializable_hash
+            serializer = find_serializable(item)
+            if serializer.respond_to?(embed_key)
+              serializer.send(embed_key)
+            else
+              item.read_attribute_for_serialization(embed_key)
+            end
           end
         end
         alias_method_chain :serialize_ids, :cancan
