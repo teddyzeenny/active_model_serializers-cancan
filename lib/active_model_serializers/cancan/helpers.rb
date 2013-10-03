@@ -3,7 +3,12 @@ module ActiveModel
     module CanCan
       module Helpers
         def current_ability
-          Ability.new(options[:scope])
+          ability = RequestStore.store["current_ability"]
+          if !ability
+            ability = Ability.new(options[:scope])
+            RequestStore.store["current_ability"] = ability
+          end
+          ability
         end
 
         def can?(*args)

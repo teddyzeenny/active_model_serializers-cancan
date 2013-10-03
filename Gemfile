@@ -5,6 +5,7 @@ gemspec
 
 gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git'
 gem 'activemodel', '~> 3.2'
+gem "request_store"
 
 group :test do
   gem 'rspec'
