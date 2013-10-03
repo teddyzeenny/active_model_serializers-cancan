@@ -3,7 +3,8 @@ module ActiveModel
     class Association #:nodoc:
 
       def authorize?
-        options[:authorize] != false
+        false
+        #options[:authorize] != false
       end
 
       class HasMany #:nodoc:
